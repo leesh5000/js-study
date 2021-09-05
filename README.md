@@ -2,6 +2,7 @@
 
 
 ## Table Of Contents
-- [사용 기술](#skills)
-- [프로젝트 구조](#Architecture)
-- [ER 다이어그램](#ER Diagram)
+- [제 1강. JS & TS Essential](#제1강.JS&TS Essential)
+- 
+### 제 1강. JS & TS Essential
+- 코드와 UI(HTML,CSS)는 가능한 한 최대한 분리할 것!
