@@ -1,3 +1,4 @@
 .idea
 js&ts-essential/.cache
 js&ts-essential/dist
+js&ts-essential/node_modules
