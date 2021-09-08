@@ -1,8 +1,25 @@
-const container = document.getElementById('root');
-const ajax = new XMLHttpRequest(); // let은 변수, const는 상수
+
+type Store = {
+    currentPage: number;
+    feeds: NewsFeed[];
+}
+
+type NewsFeed = {
+    id: number;
+    comments_count: number;
+    title: string;
+    read?: boolean;
+    url: string;
+    user: string;
+    time_ago: string;
+    points: number;
+}
+
+const container: HTMLElement | null = document.getElementById('root');
+const ajax: XMLHttpRequest = new XMLHttpRequest(); // let은 변수, const는 상수
 const newsURL = 'https://api.hnpwa.com/v0/news/1.json';
 const contentsUrl = 'https://api.hnpwa.com/v0/item/@{id}.json';
-const store = {
+const store: Store = {
     currentPage: 1,
     feeds: [],
 };
@@ -21,7 +38,7 @@ function makeFeeds(feeds) {
 }
 
 function newsFeed() {
-    let newsFeed = store.feeds;
+    let newsFeed: NewsFeed[] = store.feeds;
     const newsList = [];
     let template = `
         <div class="bg-gray-600 min-h-screen">
@@ -87,11 +104,20 @@ function newsFeed() {
     template = template.replace(
         '@{nextPage}',
         store.currentPage * 10 >= newsFeed.length ? store.currentPage : store.currentPage + 1);
-    container.innerHTML = template;
+
+    updateView(template);
+}
+
+function updateView(html) {
+    if (container) {
+        container.innerHTML = html;
+    } else {
+        console.error("not exist root container");
+    }
 }
 
 function newsDetail() {
-    const id = location.hash.substr(location.hash.lastIndexOf('/')+1);
+    const id = location.hash.substr(location.hash.lastIndexOf('/') + 1);
     const newsContents = getData(contentsUrl.replace('@{id}', id));
     let template = `
     <div class="bg-gray-600 min-h-screen pb-8">
@@ -127,7 +153,7 @@ function newsDetail() {
         }
     }
 
-    function makeComments(comments, called=0) {
+    function makeComments(comments, called = 0) {
         const commentString = [];
 
         for (let i = 0; i < comments.length; i++) {
@@ -142,14 +168,14 @@ function newsDetail() {
             `);
 
             if (comments[i].comments.length > 0) {
-                commentString.push(makeComments(comments[i].comments, called+1));
+                commentString.push(makeComments(comments[i].comments, called + 1));
             }
         }
 
         return commentString.join('');
     }
 
-    container.innerHTML = template.replace('@{comments}', makeComments(newsContents.comments));
+    updateView(template.replace('@{comments}', makeComments(newsContents.comments)));
 }
 
 function router() {
